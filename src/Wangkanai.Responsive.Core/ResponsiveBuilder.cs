@@ -4,7 +4,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-// ReSharper disable once CheckNamespace
 namespace Wangkanai.Responsive
 {
     public class ResponsiveBuilder : IResponsiveBuilder
@@ -16,10 +15,5 @@ namespace Wangkanai.Responsive
 
             Services = services;
         }
-    }
-
-    public interface IResponsiveBuilder
-    {
-        IServiceCollection Services { get; }
     }
 }

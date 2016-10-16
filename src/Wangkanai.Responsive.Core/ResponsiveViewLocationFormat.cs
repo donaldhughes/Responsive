@@ -4,14 +4,11 @@
 namespace Wangkanai.Responsive
 {
     /// <summary>
-    /// Specifies the Responsive view formar for <see cref="ResponsiveViewLocationExpander"/>.
+    /// Specifies the GetDevice view formar for <see cref="ResponsiveViewLocationExpander"/>.
     /// </summary>
-    public enum ResponsiveViewLocationExpanderFormat
+    public enum ResponsiveViewLocationFormat
     {
-        /// <summary>
-        /// Locate is
-        /// </summary>
-        Area,
+        Subfolder,
         Suffix
     }
 }

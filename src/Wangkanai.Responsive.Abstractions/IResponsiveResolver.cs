@@ -1,12 +1,12 @@
 ﻿// Copyright (c) 2016 Sarin Na Wangkanai, All Rights Reserved.
 // The GNU GPLv3. See License.txt in the project root for license information.
 
-using Wangkanai.Browser;
+using Wangkanai.Detection;
 
 namespace Wangkanai.Responsive.Abstractions
 {
     public interface IResponsiveResolver
     {
-        //DeviceInfo DeviceInfo { get; }
+        IDevice Device { get; }
     }
 }

@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Wangkanai.Browser;
+using Microsoft.Extensions.Options;
+using Wangkanai.Detection;
 
 namespace Wangkanai.Responsive
 {
@@ -22,19 +24,15 @@ namespace Wangkanai.Responsive
     /// </example>
     public class ResponsiveViewLocationExpander : IViewLocationExpander
     {
-        private const string ValueKey = "device";
-        private ResponsiveViewLocationExpanderFormat _format;
+        private const string DEVICE_KEY = "device";
+        private readonly ResponsiveViewLocationFormat _format;
 
-        /// <summary>
-        /// Instantiates a new <see cref="ResponsiveViewLocationExpander"/> instance.
-        /// </summary>
-        public ResponsiveViewLocationExpander() : this(ResponsiveViewLocationExpanderFormat.Suffix) { }
+        public ResponsiveViewLocationExpander()
+            : this(ResponsiveViewLocationFormat.Suffix)
+        {
 
-        /// <summary>
-        /// Instantiates a new <see cref="ResponsiveViewLocationExpander"/> instance.
-        /// </summary>
-        /// <param name="format">The <see cref="ResponsiveViewLocationExpanderFormat"/>.</param>
-        public ResponsiveViewLocationExpander(ResponsiveViewLocationExpanderFormat format)
+        }
+        public ResponsiveViewLocationExpander(ResponsiveViewLocationFormat format)
         {
             _format = format;
         }
@@ -43,7 +41,7 @@ namespace Wangkanai.Responsive
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            context.Values[ValueKey] = "mobile"; // waiting for device resolver
+            context.Values[DEVICE_KEY] = context.ActionContext.HttpContext.GetDevice().Device;
         }
 
         public IEnumerable<string> ExpandViewLocations(
@@ -54,34 +52,34 @@ namespace Wangkanai.Responsive
             if (viewLocations == null) throw new ArgumentNullException(nameof(viewLocations));
 
             string value;
-            context.Values.TryGetValue(ValueKey, out value);
+            context.Values.TryGetValue(DEVICE_KEY, out value);
 
             if (!string.IsNullOrEmpty(value))
             {
-                //DeviceInfo device;
+                IDevice device;
                 try
                 {
-                    //device = new DeviceInfo(value);
+                    device = new Device(value); //waiting browser beta3
                 }
                 catch (DeviceNotFoundException)
                 {
                     return viewLocations;
                 }
 
-                return ExpandViewLocationsCore(viewLocations, "device");
+                return ExpandViewLocationsCore(viewLocations, device);
             }
 
             return viewLocations;
         }
 
-        private IEnumerable<string> ExpandViewLocationsCore(IEnumerable<string> viewLocations, string deviceinfo)
+        private IEnumerable<string> ExpandViewLocationsCore(IEnumerable<string> viewLocations, IDevice device)
         {
             foreach (var location in viewLocations)
             {
-                if (_format == ResponsiveViewLocationExpanderFormat.Area)
-                    yield return location.Replace("{0}", deviceinfo + "/{0}");
+                if (_format == ResponsiveViewLocationFormat.Subfolder)
+                    yield return location.Replace("{0}", device.Type.ToString() + "/{0}");
                 else
-                    yield return location.Replace("{0}", "{0}." + deviceinfo);
+                    yield return location.Replace("{0}", "{0}." + device.Type.ToString());
 
                 yield return location;
             }

@@ -1,8 +1,9 @@
 # ASP.NET Core Responsive
 
-[![Build status](https://ci.appveyor.com/api/projects/status/nkka5uy27pje40ra/branch/master?svg=true)](https://ci.appveyor.com/project/wangkanai/Responsive/branch/master) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/Wangkanai.Responsive.svg?maxAge=2592000)](https://www.nuget.org/packages/Wangkanai.Responsive/) **Pre-Release** (Still in development)
+[![Build status](https://ci.appveyor.com/api/projects/status/cbx1xvcln7xaccs5?svg=true)](https://ci.appveyor.com/project/wangkanai/responsive) 
+[![NuGet Pre Release](https://img.shields.io/nuget/vpre/Wangkanai.Responsive.svg?maxAge=2592000)](https://www.nuget.org/packages/Wangkanai.Responsive/) **Pre-Release** (Still in development)
 
-![ASP.NET Core Responsive](https://raw.githubusercontent.com/wangkanai/Responsive/master/asset/asp.net-core-Responsive.png)
+![ASP.NET Core Responsive](https://raw.githubusercontent.com/wangkanai/Responsive/dev/asset/asp.net-core-responsive.png)
 
 ASP.NET Core Responsive middleware for routing base upon request client device detection to specific view.
 Being to target difference client devices with seperation of concern is crucial, due to you can mininize what is sent to the client directly from the service to only what is needed and nothing more. This increase performance and lower bandwidth usage.
@@ -18,14 +19,22 @@ Responsive is configured in the `ConfigureServices` method:
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddResponsive();
+    // Add responsive services.
+    services.AddResponsive()
+        .AddViewSuffix()
+        .AddViewSubfolder();
+
     // Add framework services.
-    services.AddMvc()
-        .AddViewResponsive();    
+    services.AddMvc();  
 }
 ```
 * `AddResponsive` Adds the Responsive services to the services container.
-* `AddViewResponsive` Adds support for device view files. In this sample view Responsive is based on the view file suffix. For example "mobile" in the *index.mobile.cshtml* file.
+* `AddViewSuffix` Adds support for device view files  to `Suffix`. In this sample view Responsive is based on the view file suffix. 
+
+  Ex *views/[controller]/[action]/index.mobile.cshtml*
+* `AddViewSubfolder` Adds support for device view files to `Subfolder`. In this sample view Responsive is based on the view file subfolder. 
+
+  Ex *views/[controller]/[action]/mobile/index.cshtml*
 
 #### Responsive Middleware
 
@@ -52,5 +61,5 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 #### Related projects
 
-* [ASP.NET Core Browser (Wangkanai.Browser)](https://github.com/wangkanai/Browser)
+* [ASP.NET Core Detection (Wangkanai.Detection)](https://github.com/wangkanai/Detection)
 

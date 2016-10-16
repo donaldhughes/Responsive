@@ -2,9 +2,12 @@
 // The GNU GPLv3. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Wangkanai.Responsive;
 using Wangkanai.Responsive.Abstractions;
+using Wangkanai.Detection;
+using Wangkanai.Detection.Builder;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -25,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.TryAddSingleton<IResponsiveFactory, ResponsiveFactory>();
+            services.AddDetection().AddDevice();            
             services.TryAddTransient(typeof(IResponsiveResolver), typeof(ResponsiveResolver));
 
             return new ResponsiveBuilder(services);

@@ -3,22 +3,22 @@
 
 using System;
 using Microsoft.AspNetCore.Http;
-using Wangkanai.Browser;
+using Wangkanai.Detection;
 using Wangkanai.Responsive.Abstractions;
 
 namespace Wangkanai.Responsive
 {
     public class ResponsiveResolver : IResponsiveResolver
     {
-        private ResponsiveFactory _factory;
-        //public DeviceInfo DeviceInfo { get; private set; }       
+        private readonly IDeviceResolver _deviceResolver;
 
-        public ResponsiveResolver(ResponsiveFactory factory, HttpContext context)
+        public IDevice Device => _deviceResolver.Device;
+
+        public ResponsiveResolver(IDeviceResolver deviceResolver)
         {
-            if(factory == null) throw new ArgumentNullException(nameof(factory));
+            if (deviceResolver == null) throw new ArgumentNullException(nameof(deviceResolver));
 
-            _factory = factory;            
-            //DeviceInfo = new DeviceResolver(context.Request).DeviceInfo;
+            _deviceResolver = deviceResolver;
         }
     }
 }
